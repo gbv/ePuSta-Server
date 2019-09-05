@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 // Config
 $config=array(
-    'solrURL' => 'http://esx-141.gbv.de:8983/solr/repper'
+    'solrURL' => ''
   );
 
 $do = (isset($_GET['do']) ) ?  $_GET['do']: 'basic';
