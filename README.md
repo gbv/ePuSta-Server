@@ -29,5 +29,5 @@ cat reposas.log | ./createSolrImport.php > reposas.import.json
 
 Push the date to the solr core.
 ```
-import.sh
+/opt/solr/bin/post -c $SOLRCORE reposas.import.json
 ```
