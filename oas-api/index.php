@@ -1,5 +1,5 @@
 <?php
-// DEBIG only
+// DEBUG only
 ini_set('display_errors', 1);
 
 // Config
@@ -108,6 +108,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
     $query.='  }';
     $query.='}';
 
+    
     $ch = curl_init();
     //you might need to set some cookie details up (depending on the site)
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
@@ -117,7 +118,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
 
     curl_setopt($ch, CURLOPT_USERAGENT, $useragent); //set our user agent
     $result= curl_exec ($ch); //execute and get the results
-
+    
     return $result;
 }
 
@@ -179,6 +180,7 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
     // TO solr Errors
     // print_r($solrResult);
     $result=array();
+    
     if (isset($solrResult['facets']['date'])) {
         foreach ($solrResult['facets']['date']['buckets'] as $bucket) {
             $entry=array();
@@ -260,10 +262,12 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
         }
     } else if ($solrResult['response']['numFound'] == 0) {
         http_response_code(204);
+        
+        //var_dump( $solrResult);
         echo "no content";
-        //print_r( $solrResult);
+        
         return false; 
-        //die ("no content");
+        
     } else {
        // case total and summarized TO DO Test the reaction of solr
     }
@@ -290,7 +294,23 @@ function to_xml(SimpleXMLElement $object, array $data)
             $object->addChild($key, $value);
         }   
     }   
-} 
+}
+
+function printCsv($result){
+    $firstline="";
+    foreach ($result['entrydef'] as $entrdef) {
+        $firstline.=$entrdef.",";
+    }
+    $firstline=substr($firstline,0,-1);
+    echo $firstline."\n";
+    foreach ($result['entries'] as $entry) {
+        $line="";
+        foreach ($result['entrydef'] as $entrdef) {
+            $line.=$entry[$entrdef].",";
+        }
+        echo $line."\n";
+    }
+}
 
 $result=array();
 
@@ -306,7 +326,16 @@ $json=getJSON($identifier,$from,$until,$granularity,$summarized);
 
 $result['solr_response']=json_decode($json,true);
 
+$result['entrydef']=array();
+$result['entrydef'][]="identifier";
+$result['entrydef'][]="date";
+foreach ($content as $cont){
+    $result['entrydef'][]=$cont;
+}
+
 $result['entries']=solr2entries($identifier,$granularity,$addemptyrecords,$json,$format,$content);
+
+
 
 if ($result['entries'] != false) {
     if ($format=="json") {
@@ -319,7 +348,8 @@ if ($result['entries'] != false) {
         to_xml($xml, $result);
         print $xml->asXML();
     } else {
-        die ("No format defined.");
+        header("Content-type: text/csv;charset=UTF-8");
+        printCsv($result);
     }
 }
 
