@@ -2,10 +2,7 @@
 // DEBUG only
 ini_set('display_errors', 1);
 
-// Config
-$config=array(
-    'solrURL' => ''
-  );
+include ('config.php'); 
 
 $do = (isset($_GET['do']) ) ?  $_GET['do']: 'basic';
 $format = (isset($_GET['format'])) ?  $_GET['format']: 'json';
