@@ -1,4 +1,4 @@
-# ReposAS-Server
+# ePuSta-Server
 
 The ReposAS-Server provide AccessStatistics. Required is Logfile in reposas logformat. The statistics curently only accessed by an OAS compatible API. More APIs and a Webinterface comming soon. 
 
