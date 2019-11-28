@@ -303,7 +303,8 @@ function printCsv($result){
     foreach ($result['entries'] as $entry) {
         $line="";
         foreach ($result['entrydef'] as $entrdef) {
-            $line.=$entry[$entrdef].",";
+            $value= (isset($entry[$entrdef]))? $entry[$entrdef] : 0;
+            $line.=$value.",";
         }
         echo $line."\n";
     }
