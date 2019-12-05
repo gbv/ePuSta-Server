@@ -100,4 +100,5 @@
   <field name="subjects" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="time" type="text_general"/>
   <field name="uuid" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="source" type="string" multiValued="false" indexed="true" stored="true"/>
 </schema>
