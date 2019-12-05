@@ -1,0 +1,8 @@
+# Configuration File for ePuSta-Server
+# created by Paul.Borchert at gbv.de 
+#
+
+epustaLogs=
+epustaServerBin=
+solrImports=
+solrCore=
