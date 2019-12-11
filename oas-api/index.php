@@ -108,7 +108,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
     
     $ch = curl_init();
     //you might need to set some cookie details up (depending on the site)
-    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
     curl_setopt($ch, CURLOPT_URL,$url); //set the url we want to use
     curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
