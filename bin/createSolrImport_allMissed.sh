@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source ../config/config
+dir=`dirname "$0"`
+source $dir/../config/config
 
 for filename in $epustaLogs/*.log; do
     basename="$(basename $filename .log)";
