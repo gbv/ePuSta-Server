@@ -13,6 +13,7 @@ $config=array();
 if ($handle) {
     while (($line = fgets($handle)) !== false) {
         if ( substr( trim($line),0,1) == "#" ) continue;
+        if ( trim($line) == "" ) continue;
         $strEqPos=strpos($line,"=");
         if ($strEqPos === false ) die ("Error: Can't parse config line ".$line."\n");
         $key=trim(substr($line,0,$strEqPos));
