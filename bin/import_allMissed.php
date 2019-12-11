@@ -27,11 +27,12 @@ function getSources() {
 function importSolrJSON($filepath) {
     global $config;
     $cmd="/opt/solr/bin/post -c ".$config['solrCore']." ".$filepath;
-    echo $cmd;
+    echo "->".$cmd."\n";
     shell_exec($cmd);
 }
 
 $sources = getSources();
+if (! is_array($sources)) die ("Error: Can't get sources from the solrcore.");
 
 foreach (new DirectoryIterator($config['solrImports']) as $fileInfo) {
     if($fileInfo->isDot()) continue;

@@ -11,3 +11,5 @@ epustaServerBin=
 solrImports=
 # Name of the solrCore where the
 solrCore=
+# URL to the solrServer
+solrUrl=
