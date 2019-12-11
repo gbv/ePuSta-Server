@@ -12,8 +12,7 @@ The ePuSta-Server provide AccessStatistics. Required is Logfile in epusta logfor
 
 * Clone the git-hub ePuSta-Server to a local directory via *git clone https://github.com/gbv/ePuSta-Server.git*
 * Create a Core in Solr and copy the Files, located in the *solr* directory, in the *conf* directory of the core.
-* Copy the file *config/config.template* to *config/config*
-Edit the files deleteSolrCore.sh import.sh to set the SolrURL and core name.
+* Copy the file *config/config.template* to *config/config* and set the values for the parameter.
 
 To use the OAS compatible API see.
 
