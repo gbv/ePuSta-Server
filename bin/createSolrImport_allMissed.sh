@@ -1,16 +1,14 @@
 #!/bin/bash
 
-BASEDIR=/home/borchert/epusta/repper/
-BINDIR=$BASEDIR/bin/
-LOGDIR=$BASEDIR/epustalogs/
-SOLRDIR=$BASEDIR/solrImports/
+dir=`dirname "$0"`
+source $dir/../config/config
 
-for filename in $LOGDIR/*.log; do
+for filename in $epustaLogs/*.log; do
     basename="$(basename $filename .log)";
     destfile=$basename.json
-    if [ ! -f "$SOLRDIR/$destfile" ]; then
+    if [ ! -f "$solrImports/$destfile" ]; then
         echo "Processing: $filename -> $destfile"
-        $BINDIR/createSolrImport.php --file=$filename --level=PROD > $SOLRDIR/$destfile
+        $epustaServerBin/createSolrImport.php --file=$filename --level=PROD > $solrImports/$destfile
     else
         echo "$filename allready parsed."
     fi

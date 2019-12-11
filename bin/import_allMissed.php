@@ -1,19 +1,14 @@
 #!/usr/bin/php
 <?php
 
-$config = array(
-    'solrImport_dir' => '/home/borchert/epusta/repper/solrImports/',
-    'solrcore' => 'repper',
-    'solrurl' => 'http://esx-141.gbv.de:8983/solr/'
-);
-
+include (__DIR__."/../config/config.php");
 
 function getSources() {
     global $config;
 
     $useragent='Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)';
 
-    $solrcall=$config['solrurl'].$config['solrcore']."/select?q=*:*&stats=true&stats.field=source&rows=0&stats.calcdistinct=true";
+    $solrcall=$config['solrUrl'].$config['solrCore']."/select?q=*:*&stats=true&stats.field=source&rows=0&stats.calcdistinct=true";
 
     $ch = curl_init();
     
@@ -31,14 +26,14 @@ function getSources() {
 
 function importSolrJSON($filepath) {
     global $config;
-    $cmd="/opt/solr/bin/post -c ".$config['solrcore']." ".$filepath;
-    //echo $cmd;
+    $cmd="/opt/solr/bin/post -c ".$config['solrCore']." ".$filepath;
+    echo $cmd;
     shell_exec($cmd);
 }
 
 $sources = getSources();
 
-foreach (new DirectoryIterator($config['solrImport_dir']) as $fileInfo) {
+foreach (new DirectoryIterator($config['solrImports']) as $fileInfo) {
     if($fileInfo->isDot()) continue;
     if($fileInfo->isDir()) continue;
     $filename=$fileInfo->getFilename();
