@@ -1,6 +1,6 @@
 # ePuSta-Server
 
-The ePuSta-Server provide AccessStatistics. Required is Logfile in epusta logformat. The statistics curently only accessable by an OAS compatible API. More APIs and a Webinterface comming soon. 
+The ePuSta-Server are designed to provide usagestatistics of electronic publications. Required are logfiles in epusta logformat. The statistics curently only accessable by an OAS compatible API. More APIs and a Webinterface comming soon. 
 
 ## Getting Started
 
