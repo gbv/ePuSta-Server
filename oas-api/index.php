@@ -87,7 +87,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
         $query.='      identifier: {';
         $query.='        type:terms, ';
         $query.='        field:identifier,';
-        $query.='        limit:1000,';
+        $query.='        limit:10000,';
         $query.='        facet: { ';
     }
     $query.='          oascontent:{';
