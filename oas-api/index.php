@@ -69,7 +69,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
     } else {
         $identifierQuery = 'identifier:'.$identifier;
     }
-    $query='q='.$identifierQuery.'  AND  NOT (subjects:filter*)';
+    $query='q='.$identifierQuery.'  AND  NOT (subjects:filter*) AND NOT (subjects:reposas\:filter*) AND NOT (subjects:epusta\:filter*)';
     //$query.=' AND dateTime:['.$from.'T00:00:00Z TO '.$until.'T23:59:59Z]';
     $query.='&rows=1';
     $query.='&json.facet={';
