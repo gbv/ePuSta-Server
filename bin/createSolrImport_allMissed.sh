@@ -1,7 +1,12 @@
 #!/bin/bash
 
 dir=`dirname "$0"`
-source $dir/../config/config
+if [ -f "$dir/../config/config" ]; then
+    source $dir/../config/config
+else
+    echo "Error can't find configfile ($dir/../config/config)"
+    exit 1
+fi 
 
 for filename in $epustaLogs/*.log; do
     basename="$(basename $filename .log)";
