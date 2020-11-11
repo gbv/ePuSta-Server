@@ -68,7 +68,7 @@ while (! feof($handle)) {
             $str='{ "uuid": "'.$logLine->UUID.'"';
             $str.=', "identifier":'.json_encode($logLine->Identifier);
             $time = new DateTime($logLine->Time);
-            $str.=', "dateTime":"'.$time->format(DateTime::ISO8601).'"';
+            $str.=', "dateTime":"'.$time->format('Y-m-d\TH:i:s\Z').'"';
             $str.=', "subjects":'.json_encode($logLine->Subjects);
             $str.=', "source":'.$filename;
             $str.='}';
