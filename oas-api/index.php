@@ -103,8 +103,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
         $query.='    }';
     }
     $query.='  }';
-    $query.='}';
-
+    
     
     $ch = curl_init();
     //you might need to set some cookie details up (depending on the site)
