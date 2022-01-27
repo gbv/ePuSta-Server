@@ -101,6 +101,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
     }
     if ($datefacet) {
         $query.='    }';
+        $query.='  }';
     }
     $query.='  }';
     
@@ -258,7 +259,7 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
         }
     } else if ($solrResult['response']['numFound'] == 0) {
         http_response_code(204);
-        
+      
         //var_dump( $solrResult);
         echo "no content";
         
