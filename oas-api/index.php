@@ -18,7 +18,9 @@ foreach ($content as $cont) {
     }
 }
 $addemptyrecords=(isset($_GET['addemptyrecords']) &&  $_GET['addemptyrecords']  == 'true') ? true : false;
+//echo "addemptyrecords:(".$addemptyrecords.")\n"; 
 $summarized = (isset($_GET['summarized']) &&  $_GET['summarized']  == 'true') ? true : false;
+//echo "SUmmarise:(".$summarized.")\n"; 
 $jsonheader = (isset($_GET['jsonheader']) && $_GET['jsonheader'] == 'true') ? true : false;
 $informational = (isset($_GET['informational']) && $_GET['informational']  == 'true') ? true : false;
 $identifier = (isset($_GET['identifier']) && $_GET['identifier']) ? $_GET['identifier'] : '*';
@@ -87,7 +89,7 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
         $query.='      identifier: {';
         $query.='        type:terms, ';
         $query.='        field:identifier,';
-        $query.='        limit:1000,';
+        $query.='        limit:100000,';
         $query.='        facet: { ';
     }
     $query.='          oascontent:{';
@@ -104,8 +106,8 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
     }
     $query.='  }';
     $query.='}';
-
-    
+    //echo "Query:".$query."\n";
+    //Paul 
     $ch = curl_init();
     //you might need to set some cookie details up (depending on the site)
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
@@ -115,7 +117,8 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
 
     curl_setopt($ch, CURLOPT_USERAGENT, $useragent); //set our user agent
     $result= curl_exec ($ch); //execute and get the results
-    
+    //echo "Test";
+    //var_dump($result); 
     return $result;
 }
 
@@ -175,10 +178,11 @@ function getEntrysForIdentifierBucket($bucket,$identifier,$addemptyrecords,$form
 function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$format,$content) {
     $solrResult=json_decode($solrjson,true);
     // TO solr Errors
-    // print_r($solrResult);
+    //print_r($solrResult);
     $result=array();
     
     if (isset($solrResult['facets']['date'])) {
+        //echo "date br";
         foreach ($solrResult['facets']['date']['buckets'] as $bucket) {
             $entry=array();
             $date=$bucket['val'];
@@ -246,6 +250,7 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
             }
 
         }
+        return $result;
 
     } else if (isset($solrResult['facets']['identifier'])) {
         // case granularity total
@@ -257,9 +262,10 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
             }
             $result=array_merge($entries,$result);
         }
-    } else if ($solrResult['response']['numFound'] == 0) {
-        http_response_code(204);
-        
+        return $result;
+    } else if (isset ($solrResult['response']['numFound'])  && $solrResult['response']['numFound'] == 0) {
+        //http_response_code(204);
+        //paul       
         //var_dump( $solrResult);
         echo "no content";
         
@@ -267,6 +273,9 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
         
     } else {
        // case total and summarized TO DO Test the reaction of solr
+       //var_dump( $solrResult);
+       //echo "not implemented Case\n";
+       return false;
     }
     return $result;
 }
@@ -320,9 +329,12 @@ if ($jsonheader == 'true') {
     $result['summarized']=$summarized;
 }
 
+
 $json=getJSON($identifier,$from,$until,$granularity,$summarized);
 
+
 $result['solr_response']=json_decode($json,true);
+//var_dump( $result['solr_response']);
 
 $result['entrydef']=array();
 $result['entrydef'][]="identifier";
@@ -332,7 +344,6 @@ foreach ($content as $cont){
 }
 
 $result['entries']=solr2entries($identifier,$granularity,$addemptyrecords,$json,$format,$content);
-
 
 
 if ($result['entries'] != false) {
@@ -349,7 +360,8 @@ if ($result['entries'] != false) {
         header("Content-type: text/csv;charset=UTF-8");
         printCsv($result);
     }
+} else {
+    echo "No Content";
 }
-
 
 ?>
