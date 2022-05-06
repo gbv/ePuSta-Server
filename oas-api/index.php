@@ -266,7 +266,19 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
         return false; 
         
     } else {
-       // case total and summarized TO DO Test the reaction of solr
+        // case total and summarized TO DO Test the reaction of solr
+        $bucket = $solrResult['facets'] ;
+        $fakeBucket=array(
+            'val' => $identifier,
+            'count' => $bucket['count'],
+            'oascontent' =>  $bucket['oascontent']
+        );
+        $entries=getEntrysForIdentifierBucket($fakeBucket,$identifier,$addemptyrecords,$format,$content);
+        foreach ($entries as $key => $entry) {
+            $entries[$key]['date']="2010-01-01";
+        }
+        $result=array_merge($entries,$result);    
+        
     }
     return $result;
 }
@@ -322,6 +334,7 @@ if ($jsonheader == 'true') {
 
 $json=getJSON($identifier,$from,$until,$granularity,$summarized);
 
+
 $result['solr_response']=json_decode($json,true);
 
 $result['entrydef']=array();
@@ -330,9 +343,7 @@ $result['entrydef'][]="date";
 foreach ($content as $cont){
     $result['entrydef'][]=$cont;
 }
-
 $result['entries']=solr2entries($identifier,$granularity,$addemptyrecords,$json,$format,$content);
-
 
 
 if ($result['entries'] != false) {
