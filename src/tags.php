@@ -2,7 +2,7 @@
 
 function getTags () {
     global $config;
-    $solrUrl=$config['solrURL'].$config['solrCore'].'/select';
+    $solrUrl=$config['solrUrl'].$config['solrCore'].'/select';
 
     $query='facet.field=subjects&facet.limit=-1&facet=true&q=*%3A*&rows=0';
 

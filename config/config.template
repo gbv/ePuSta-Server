@@ -16,4 +16,4 @@ solrUrl=
 # Directory for Loggingfiles
 logdir=
 # Loglevel - DEBUG, INFO, NOTICE, WARN, ERROR, CRITICAL, ALERT, EMERGENCY
-loglevel='INFO';  
+loglevel=INFO
