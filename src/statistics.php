@@ -3,7 +3,7 @@
 function getStatistics($start_date, $end_date,$identifier,$tags,$granularity) {
     
     global $config;
-    $solrUrl=$config['solrURL'].$config['solrCore'].'/query';
+    $solrUrl=$config['solrUrl'].$config['solrCore'].'/query';
 
     $dategap='';
     $datefacet=true;
