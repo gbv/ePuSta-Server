@@ -16,10 +16,7 @@ require __DIR__ . '/../src/tags.php';
 require __DIR__ . '/../src/swagger-ui.php';
 require __DIR__ . '/../src/loglines.php';
 
-$config=[];
-$config['solrURL']="http://esx-141.gbv.de:8983/solr/clausthal";
-$config['logdir']='../log/';
-$config['loglevel']='DEBUG';  // DEBUG, INFO, NOTICE, WARN, ERROR, CRITICAL, ALERT, EMERGENCY
+include (__DIR__."/../config/config.php");
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

@@ -13,3 +13,7 @@ solrImports=
 solrCore=
 # URL to the solrServer
 solrUrl=
+# Directory for Loggingfiles
+logdir=
+# Loglevel - DEBUG, INFO, NOTICE, WARN, ERROR, CRITICAL, ALERT, EMERGENCY
+loglevel='INFO';  
