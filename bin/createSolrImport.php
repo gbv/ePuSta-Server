@@ -4,7 +4,7 @@
 require_once __DIR__.'/lib/reposas-loglinepaser.php';
 
 function print_help() {
-    echo "\nConvert a reposas logfile to a solr importable jsonfile. \n";
+    echo "\nConvert a epusta logfile to a solr importable jsonfile. \n";
     echo "\nUsage: createSolrImport.php --file EPUSTALOGFILE [--level] [-h|--help] \n";
     echo "  --file - Path to the epusta-logfile (required)\n";
     echo "  --level - indecates witch logline are imported to the solrindex. Levels: \n";
