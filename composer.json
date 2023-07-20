@@ -1,0 +1,8 @@
+{
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.6",
+        "league/openapi-psr7-validator": "^0.21.0",
+        "monolog/monolog": "^3.4"
+    }
+}
