@@ -72,6 +72,14 @@ $app = AppFactory::create();
 
 $app->addRoutingMiddleware();
 
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+    return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET');
+});
+
 $psr15Middleware = (new \League\OpenAPIValidation\PSR15\ValidationMiddlewareBuilder)->fromYamlFile($openapiFile)->getValidationMiddleware();
 $app->add($psr15Middleware);
 
@@ -97,7 +105,12 @@ $errorMiddleware->setErrorHandler(
         $payload = json_encode(['error' => ['message' => $exception->getPrevious()->getMessage()] ]);
         $response->getBody()->write($payload);
         $accesslogger->info($request->getRequestTarget().' 400');
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return $response
+                ->withStatus(400)
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('Access-Control-Allow-Origin', '*')
+                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                ->withHeader('Access-Control-Allow-Methods', 'GET');
     }
 );
 $errorMiddleware->setErrorHandler(
@@ -109,14 +122,19 @@ $errorMiddleware->setErrorHandler(
         $payload = json_encode(['error' => ['message' => $exception->getPrevious()->getMessage()] ]);
         $response->getBody()->write($payload);
         $accesslogger->info($request->getRequestTarget().' 400');
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return $response
+                ->withStatus(400)
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('Access-Control-Allow-Origin', '*')
+                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+                ->withHeader('Access-Control-Allow-Methods', 'GET');
     }
 );
 
 //$app->log->setLevel(\Slim\Log::WARN);
 //$app->log->setEnabled(true);
 
-$app->setBasePath('/newAPI/my_slim4/public');
+$app->setBasePath('/clausthal/rest-api');
 
 $accesslogger= new Logger('access');
 $streamHandler = new StreamHandler(__DIR__ .'/'. $config['logdir'] . 'access.log' , 100);
@@ -173,7 +191,7 @@ $app->get('/statistics', function (Request $request, Response $response, $args) 
     $start_date=$param['start_date'];
     $end_date=$param['end_date'];
     $identifier= (isset($param['identifier'])) ? $param['identifier'] : '';
-    $tags= (isset ($param['tagquery']) && $param['tagquery'] != '') ?  explode(' ',$param['tagquery']) : [];
+    $tags= (isset ($param['tagquery']) && $param['tagquery'] != '') ?  array_filter(explode(' ',$param['tagquery'])) : [];
     $granularity=(isset($param['granularity'])) ? $param['granularity'] : 'total';
 
     if (! isStartDateFirstDayOfGranularityPeriod($start_date,$granularity) ) {

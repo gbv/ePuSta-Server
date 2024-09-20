@@ -1,12 +1,8 @@
 openapi: 3.0.0
 servers:
   # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/MAERCHENFAMILIE_1/Epusta/1.0.0
-  - description: ePuSta TestAPI-meinSimplePHP
-    url: http://esx-141.gbv.de/newAPI/php-silex-server-generated/SwaggerServer/
-  - description: ePuSta TestAPI-mySlim4
-    url: http://esx-141.gbv.de/newAPI/my_slim4/public
+  - description: ePuSta Clausthal
+    url: http://esx-141.gbv.de/clausthal/rest-api
 info:
   description: An API to retrieve access statistics for documents
   version: "1.0.0"

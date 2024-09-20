@@ -69,6 +69,7 @@ class ReposasLogline extends Logline{
     public $UUID;
     public $SessionID;
     public $Subjects;
+    public $Logline;
   
     function __construct() {
     }
@@ -134,7 +135,22 @@ class ReposasLogfileParser {
             $logline->UserAgent=trim($treffer[12]);
             $logline->SessionID=trim($treffer[13]);
             $logline->Identifier=json_decode ( trim($treffer[14]), true);
-            $logline->Subjects=json_decode ( trim($treffer[15]), true);
+	    $logline->Subjects=json_decode ( trim($treffer[15]), true);
+	    
+	    //Temp until refacturung logparsing
+	    $str=$logline->IP." ";
+            $str.=$logline->RemoteLogname." ";
+            $str.=$logline->RemoteUser." ";
+            $str.='['.$logline->Time."] ";
+            $str.='"'.$logline->HttpMethod." ";
+            $str.=$logline->URL." ";
+            $str.=$logline->HttpProtokol.'" ';
+            $str.=$logline->HttpStatusCode.' ';
+            $str.=$logline->SizeOfResponse." ";
+            $str.='"'.$logline->Referer.'" ';
+            $str.='"'.$logline->UserAgent.'"';
+	    $logline->Logline=$str;
+
             return true;
         } else {
             fwrite(STDERR, "Error: can't parse Logline:\n");
