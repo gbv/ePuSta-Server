@@ -2,7 +2,7 @@
 
 function getSwaggerUi() {
 
-    $yamlUrl='http://esx-141.gbv.de/newAPI/my_slim4/public/Epusta-1.0.0.openapi.yaml';
+    $yamlUrl='http://esx-141.gbv.de/clausthal/rest-api/Epusta-1.0.0.openapi.yaml';
     $html = <<<HTML
  <!DOCTYPE html>
 <html lang="en">
