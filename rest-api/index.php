@@ -134,7 +134,7 @@ $errorMiddleware->setErrorHandler(
 //$app->log->setLevel(\Slim\Log::WARN);
 //$app->log->setEnabled(true);
 
-$app->setBasePath('/clausthal/rest-api');
+$app->setBasePath($config['restApiBasePath']);
 
 $accesslogger= new Logger('access');
 $streamHandler = new StreamHandler(__DIR__ .'/'. $config['logdir'] . 'access.log' , 100);

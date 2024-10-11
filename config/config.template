@@ -17,3 +17,5 @@ solrUrl=
 logdir=
 # Loglevel - DEBUG, INFO, NOTICE, WARN, ERROR, CRITICAL, ALERT, EMERGENCY
 loglevel=INFO
+# Basepath of the rest api eg.'/clausthal/rest-api'
+restApiBasePath=
