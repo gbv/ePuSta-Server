@@ -2,7 +2,11 @@
 
 function getSwaggerUi() {
 
-    $yamlUrl='http://esx-141.gbv.de/clausthal/rest-api/Epusta-1.0.0.openapi.yaml';
+    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https://" : "http://";
+    $url.= $_SERVER['HTTP_HOST'];
+    $url.= $_SERVER['REQUEST_URI'];  
+            
+    $yamlUrl= $url."/".'Epusta-1.0.0.openapi.yaml';
     $html = <<<HTML
  <!DOCTYPE html>
 <html lang="en">
