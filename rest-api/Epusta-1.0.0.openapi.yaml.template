@@ -1,0 +1,315 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: ePuSta Clausthal
+    url: {{ restApiBasePath }}
+info:
+  description: An API to retrieve access statistics for documents
+  version: "1.0.0"
+  title: sPuSta-Server API
+  contact:
+    email: paul.borchert@gbv.de
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /:
+    get:
+      summary: Retrieve UI View of the openAPI spec
+      responses:
+        '200':
+          description: Successful request
+          content:
+            text/html:
+              schema:
+                type: string
+  /documents:
+    get:
+      summary: Retrieve list of documents
+      description: |
+        Returns a list of documents
+      parameters:
+        - name: start_date
+          in: query
+          description: |
+            The start time for the time period for which to compute access 
+            statistics.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: | 
+            The end time for the time period for which to compute access 
+            statistics.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tagquery
+          in: query
+          description: List of tags to filter access statistics.
+          required: false
+          schema:
+            type: string
+            example: mir_genre:dissertation -filter:robot
+        - name: start
+          in: query
+          required: false
+          description: Used for paging, skipt the n first results
+          schema: 
+            type: integer
+        - name: limit
+          in: query
+          description: Used for paging, limit the number of results 
+          required: false
+          schema: 
+            type: integer
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reponse: 
+                    type: object
+                    properties:
+                      start_date: 
+                        type: string
+                        format: date-time
+                      end_date: 
+                        type: string
+                        format: date-time
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    $ref: '#/components/schemas/Error'
+  /statistics:
+    get:
+      summary: Retrieve access statistics.
+      description: Returns the access statistics for the specified document.
+      parameters:
+        - name: identifier
+          in: query
+          description: | 
+            The ID of the document for which to retrieve access statistics.
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: |
+            The start time for the time period for which to compute access 
+            statistics.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: | 
+            The end time for the time period for which to compute access 
+            statistics.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: granularity
+          in: query
+          description: | 
+            The granularity of access statistics calculation (per day, 
+            per month, or per year).
+          required: false
+          schema:
+            type: string
+            enum: [total, day, week, month, year]
+        - name: tagquery
+          in: query
+          description: List of tags to filter access statistics.
+          required: false
+          schema:
+            type: string
+            example: mir_genre:dissertation -filter:robot
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reponse: 
+                    type: object
+                    properties:
+                      start_date: 
+                        type: string
+                        format: date-time
+                      end_date: 
+                        type: string
+                        format: date-time
+                      identifier: 
+                        type: string
+                  statistics:
+                    $ref: '#/components/schemas/Statistic'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    $ref: '#/components/schemas/Error'
+  /loglines:
+    get:
+      summary: Retrieve loglines.
+      description: Returns the access statistics for the specified document.
+      parameters:
+        - name: identifier
+          in: query
+          description: | 
+            The ID of the document for which to retrieve access statistics.
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: |
+            The start time for the time period for which to compute access 
+            statistics.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          description: | 
+            The end time for the time period for which to compute access 
+            statistics.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: tagquery
+          in: query
+          description: List of tags to filter access statistics.
+          required: false
+          schema:
+            type: string
+            example: mir_genre:dissertation -filter:robot
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reponse: 
+                    type: object
+                    properties:
+                      start_date: 
+                        type: string
+                        format: date-time
+                      end_date: 
+                        type: string
+                        format: date-time
+                  loglines:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Logline'
+  /tags:
+    get:
+      summary: Retrieve all tags.
+      description: Returns all tags
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                  type: array
+                  items:
+                    type: string
+components:
+  schemas:
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+        count:
+          type: integer
+    Statistic:
+      type: object
+      properties:
+        total:
+          type: integer
+        day:
+          type: array
+          items:
+            type: object
+            properties: 
+              term: 
+                type: string
+              count:
+                type: integer
+        month:
+          type: array
+          items:
+            type: object
+            properties: 
+              term: 
+                type: string
+              count:
+                type: integer
+        year:
+          type: array
+          items:
+            type: object
+            properties: 
+              term: 
+                type: string
+              count:
+                type: integer
+    Logline:
+      type: object
+      properties:
+        uuid_id:
+          type: string
+          description: UUID of the logline. Marked on first parsing.
+        logline:
+          type: string
+          description: The String of the original logline.
+        subjects:
+          type: array
+          items:
+            type: string
+        identifier:
+          type: array
+          items:
+            type: string
+          description: Multiple identfier of the Document.
+        sessionid:
+          type: string
+        source:
+          type: string
+          description: Source of the logline, usually the logfile.
+    Error:
+      type: object
+      properties:
+        message: 
+          type: string
+          description: Errormessage
+        code:
+          type: integer
