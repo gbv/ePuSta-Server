@@ -22,7 +22,11 @@ include (__DIR__."/../config/config.php");
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
-$openapiFile = 'Epusta-1.0.0.openapi.yaml';
+//$openapiFile = 'Epusta-1.0.0.openapi.yaml';
+
+$yaml = file_get_contents('Epusta-1.0.0.openapi.yaml.template');
+
+$openapiFile = str_replace('{{ restApiBasePath }}','https://'.$config['restApiDomain'].$config['restApiBasePath'],$yaml);
 
 function isStartDateFirstDayOfGranularityPeriod ($start_date, $granularity){
     switch ($granularity) {
@@ -80,7 +84,7 @@ $app->add(function ($request, $handler) {
             ->withHeader('Access-Control-Allow-Methods', 'GET');
 });
 
-$psr15Middleware = (new \League\OpenAPIValidation\PSR15\ValidationMiddlewareBuilder)->fromYamlFile($openapiFile)->getValidationMiddleware();
+$psr15Middleware = (new \League\OpenAPIValidation\PSR15\ValidationMiddlewareBuilder)->fromYaml($openapiFile)->getValidationMiddleware();
 $app->add($psr15Middleware);
 
 $logger = new Logger('error');
@@ -102,23 +106,6 @@ $errorMiddleware->setErrorHandler(
     function (Slim\Psr7\Request $request, Throwable $exception, bool $displayErrorDetails) {
         global $accesslogger;
         $response = new Slim\Psr7\Response();
-        $payload = json_encode(['error' => ['message' => $exception->getPrevious()->getMessage()] ]);
-        $response->getBody()->write($payload);
-        $accesslogger->info($request->getRequestTarget().' 400');
-        return $response
-                ->withStatus(400)
-                ->withHeader('Content-Type', 'application/json')
-                ->withHeader('Access-Control-Allow-Origin', '*')
-                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-                ->withHeader('Access-Control-Allow-Methods', 'GET');
-    }
-);
-$errorMiddleware->setErrorHandler(
-    InvalidResponseMessage::class,
-    function (Slim\Psr7\Request $request, Throwable $exception, bool $displayErrorDetails) {
-        global $accesslogger;
-        $response = new Slim\Psr7\Response();
-        print_r($exception);
         $payload = json_encode(['error' => ['message' => $exception->getPrevious()->getMessage()] ]);
         $response->getBody()->write($payload);
         $accesslogger->info($request->getRequestTarget().' 400');
