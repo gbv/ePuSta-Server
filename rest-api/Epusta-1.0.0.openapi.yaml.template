@@ -1,12 +1,11 @@
 openapi: 3.0.0
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: ePuSta Clausthal
+  - description: ePuSta 
     url: {{ restApiBasePath }}
 info:
   description: An API to retrieve access statistics for documents
   version: "1.0.0"
-  title: sPuSta-Server API
+  title: ePuSta-Server API
   contact:
     email: paul.borchert@gbv.de
   license:
