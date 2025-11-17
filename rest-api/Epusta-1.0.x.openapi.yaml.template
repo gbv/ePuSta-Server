@@ -4,7 +4,7 @@ servers:
     url: {{ restApiBasePath }}
 info:
   description: An API to retrieve access statistics for documents
-  version: "1.0.0"
+  version: {{ openApiVersion }} 
   title: ePuSta-Server API
   contact:
     email: paul.borchert@gbv.de

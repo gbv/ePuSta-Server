@@ -1,12 +1,12 @@
 <?php
 
-function getSwaggerUi() {
+function getSwaggerUi($openapiFile) {
 
     $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https://" : "http://";
     $url.= $_SERVER['HTTP_HOST'];
     $url.= $_SERVER['REQUEST_URI'];  
-            
-    $yamlUrl= $url."/".'Epusta-1.0.0.openapi.yaml';
+    $url = (substr ($url,-1) == "/" ) ?  $url : $url."/";             
+    $yamlUrl= $url.$openapiFile;
     $html = <<<HTML
  <!DOCTYPE html>
 <html lang="en">

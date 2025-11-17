@@ -24,9 +24,10 @@ include (__DIR__."/../config/config.php");
 
 //$openapiFile = 'Epusta-1.0.0.openapi.yaml';
 
-$yaml = file_get_contents('Epusta-1.0.0.openapi.yaml.template');
+$yaml = file_get_contents('Epusta-1.0.x.openapi.yaml.template');
 
 $openapiFile = str_replace('{{ restApiBasePath }}','https://'.$config['restApiDomain'].$config['restApiBasePath'],$yaml);
+$openapiFile = str_replace('{{ openApiVersion }}','https://'."1.0.1",$openapiFile);
 
 function isStartDateFirstDayOfGranularityPeriod ($start_date, $granularity){
     switch ($granularity) {
@@ -133,7 +134,7 @@ $accesslogger->pushHandler($streamHandler);
  *
  */
 $app->get('/', function (Request $request, Response $response, $args) {
-    $html = getSwaggerUi();
+    $html = getSwaggerUi("Epusta-1.0.1.openapi.yaml");
     $response->getBody()->write($html);
     return $response->withHeader('Content-Type', 'text/html');
 });
