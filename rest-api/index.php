@@ -77,12 +77,19 @@ $app = AppFactory::create();
 
 $app->addRoutingMiddleware();
 
-$app->add(function ($request, $handler) {
-    $response = $handler->handle($request);
+$app->add(function ($request, $handler) use ($app) {
+    if ($request->getMethod() === 'OPTIONS') {
+        $response = $app->getResponseFactory()->createResponse();
+        //$response = new Slim\Psr7\Response();
+    } else {
+        $response = $handler->handle($request);
+    }
     return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET');
+	    ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->withHeader('Access-Control-Allow-Credentials', 'true')
+            ->withHeader('Access-Control-Allow-Headers', '*')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 });
 
 $psr15Middleware = (new \League\OpenAPIValidation\PSR15\ValidationMiddlewareBuilder)->fromYaml($openapiFile)->getValidationMiddleware();
@@ -111,11 +118,13 @@ $errorMiddleware->setErrorHandler(
         $response->getBody()->write($payload);
         $accesslogger->info($request->getRequestTarget().' 400');
         return $response
-                ->withStatus(400)
+		->withStatus(400)
+	        ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
                 ->withHeader('Content-Type', 'application/json')
-                ->withHeader('Access-Control-Allow-Origin', '*')
-                ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-                ->withHeader('Access-Control-Allow-Methods', 'GET');
+		->withHeader('Access-Control-Allow-Origin', '*')
+	        ->withHeader('Access-Control-Allow-Credentials', 'true')
+		->withHeader('Access-Control-Allow-Headers', '*')
+	        ->withHeader('Access-Control-Allow-Methods', 'GET,  POST, PUT, PATCH, DELETE, OPTIONS');
     }
 );
 
@@ -213,6 +222,11 @@ $app->get('/tags', function (Request $request, Response $response, $args) {
     $response->getBody()->write($payload);
     $accesslogger->info($request->getRequestTarget().' 200');
     return $response->withHeader('Content-Type', 'application/json');
+});
+
+$app->options('/{routes:.+}', function (Request $request, Response $response) {
+    // Leere Antwort reicht, Header kommen aus Middleware
+    return $response;
 });
 
 $app->run();

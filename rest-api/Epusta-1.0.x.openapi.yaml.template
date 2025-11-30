@@ -22,6 +22,10 @@ paths:
             text/html:
               schema:
                 type: string
+    options:
+      responses:
+        '200':
+          description: CORS preflight
   /documents:
     get:
       summary: Retrieve list of documents
@@ -95,6 +99,10 @@ paths:
                 properties:
                   error:
                     $ref: '#/components/schemas/Error'
+    options:
+      responses:
+        '200':
+          description: CORS preflight
   /statistics:
     get:
       summary: Retrieve access statistics.
@@ -170,6 +178,10 @@ paths:
                 properties:
                   error:
                     $ref: '#/components/schemas/Error'
+    options:
+      responses:
+        '200':
+          description: CORS preflight
   /loglines:
     get:
       summary: Retrieve loglines.
@@ -227,6 +239,10 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Logline'
+    options:
+      responses:
+        '200':
+          description: CORS preflight
   /tags:
     get:
       summary: Retrieve all tags.
@@ -240,6 +256,10 @@ paths:
                   type: array
                   items:
                     type: string
+    options:
+      responses:
+        '200':
+          description: CORS preflight
 components:
   schemas:
     Document:
