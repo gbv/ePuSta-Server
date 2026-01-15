@@ -5,13 +5,12 @@
         "league/openapi-psr7-validator": "^0.21.0",
         "monolog/monolog": "^3.4"
     },
-    
+
     "scripts": {
         "prepare": [
              "@create-logdir"
-             
+
         ],
-        "create-logdir": "mkdir log"
-  }
-  
+        "create-logdir": "mkdir -p -m 777 log"
+    }
 }
