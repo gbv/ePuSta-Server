@@ -56,7 +56,7 @@ for filename in $epustaLogs/*; do
             if [ ${filename: -3} == ".gz" ]; then gzip -d $filename; fi
             $epustaServerBin/createSolrImport.php --file=$filename2 --level=PROD > $solrImports/$destfile
             if [ ${filename: -3} == ".gz" ]; then gzip $filename2; fi 
-        elif [$filename -nt $solrImports/$destfile] && [ "$selected" = "outdated" ]; then
+        elif [ $filename -nt $solrImports/$destfile ] && [ "$selected" = "outdated" ]; then
             echo "Processing: $filename -> $destfile (overwrite)"
             if [ ${filename: -3} == ".gz" ]; then gzip -d $filename; fi
             $epustaServerBin/createSolrImport.php --file=$filename2 --level=PROD > $solrImports/$destfile
