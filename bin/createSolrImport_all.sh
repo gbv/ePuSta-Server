@@ -31,8 +31,9 @@ while getopts ":hs" arg; do
                     ;;
             esac
             ;;
-        h | *) 
+        h | *)
             print_help
+            exit 0
             ;;
     esac
 done
