@@ -78,19 +78,16 @@ fi
 if [ "$FORMAT" = "json" ]; then
     echo "$body" | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
         | grep -oP '"[^"]+"\s*,\s*\d+' \
-        | awk -F',' 'BEGIN{print "["} {
-            gsub(/^ +| +$/, "", $1);
-            count=$2+0;
+        | awk 'BEGIN{print "["} {
+            match($0, /^"([^"]+)",\s*([0-9]+)/, arr);
             if (NR>1) printf ",\n";
-            printf "  {\"source\": %s, \"count\": %d}", $1, count
-          } END{print "\n]"}'
+            printf "  {\"source\": \"%s\", \"count\": %d}", arr[1], arr[2]+0
+          } END{printf "\n]\n"}'
 else
     echo "$body" | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
         | grep -oP '"[^"]+"\s*,\s*\d+' \
-        | awk -F',' '{
-            gsub(/^ +| +$/, "", $1);
-            gsub(/"/, "", $1);
-            count=$2+0;
-            printf "%-60s %d\n", $1, count
+        | awk '{
+            match($0, /^"([^"]+)",\s*([0-9]+)/, arr);
+            printf "%-60s %d\n", arr[1], arr[2]+0
           }'
 fi
