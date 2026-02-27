@@ -63,19 +63,26 @@ SOLRURL="$solrUrl$solrCore"
 
 delete_by_source() {
     local file="$1"
-    local filename
 
     if [ ! -f "$file" ]; then
         echo "Error: '$file' is not a file" >&2
         return 1
     fi
 
-    filename=$(basename "$file")
-    echo "Deleting Solr entries with source=\"$filename\"..."
+    # Extract the source value (epustalog filename) from the first line of the solrImport file
+    local source_value
+    source_value=$(grep -oP '"source":\K[^,\}]+' "$file" | head -1 | tr -d '"' | tr -d ' ')
+
+    if [ -z "$source_value" ]; then
+        echo "Error: Could not extract 'source' value from '$file'" >&2
+        return 1
+    fi
+
+    echo "Deleting Solr entries with source=\"$source_value\"..."
 
     local response http_code
     response=$(curl -s -w "\n%{http_code}" "$SOLRURL/update" \
-        --data "<delete><query>source:\"$filename\"</query></delete>" \
+        --data "<delete><query>source:\"$source_value\"</query></delete>" \
         -H 'Content-type:text/xml; charset=utf-8')
     http_code=$(echo "$response" | tail -1)
 
@@ -84,7 +91,7 @@ delete_by_source() {
         return 1
     fi
 
-    echo "Done: entries for '$filename' deleted."
+    echo "Done: entries for '$source_value' deleted."
 }
 
 # Process all files
