@@ -111,9 +111,23 @@ process_file() {
     fi
 }
 
+# Check if a path is within the epustaLogs directory
+check_epustaLogs_path() {
+    local path="$1"
+    local real_path real_epustaLogs
+    real_path=$(realpath -m "$path")
+    real_epustaLogs=$(realpath -m "$epustaLogs")
+    if [[ "$real_path" != "$real_epustaLogs" && "$real_path" != "$real_epustaLogs/"* ]]; then
+        echo "Error: '$path' is not within the epustaLogs directory ($epustaLogs)" >&2
+        return 1
+    fi
+}
+
 # Determine input paths: from arguments or from config
+EXPLICIT_PATHS=false
 if [ $# -gt 0 ]; then
     INPUT_PATHS=("$@")
+    EXPLICIT_PATHS=true
 else
     INPUT_PATHS=("$epustaLogs")
 fi
@@ -121,11 +135,17 @@ fi
 # Process all input paths
 for path in "${INPUT_PATHS[@]}"; do
     if [ -d "$path" ]; then
+        if [ "$EXPLICIT_PATHS" = true ]; then
+            check_epustaLogs_path "$path" || exit 1
+        fi
         for file in "$path"/*; do
             [ -f "$file" ] || continue
             process_file "$file"
         done
     elif [ -f "$path" ]; then
+        if [ "$EXPLICIT_PATHS" = true ]; then
+            check_epustaLogs_path "$path" || exit 1
+        fi
         process_file "$path"
     else
         echo "Error: '$path' is not a file or directory" >&2
