@@ -75,6 +75,13 @@ if [ "$http_code" -ne 200 ]; then
 fi
 
 # facet_counts.facet_fields.source is an alternating array: [name, count, name, count, ...]
+# Example JSON output:
+# [
+#   {"source": "access-example-2026-02-24.epusta.log", "count": 12164},
+#   {"source": "access-example-2026-02-25.epusta.log", "count": 3954},
+#   {"source": "access-example-2026-02-26.epusta.log", "count": 5094},
+#   {"source": "access-example-2026-02-27.epusta.log", "count": 5622}
+# ]
 if [ "$FORMAT" = "json" ]; then
     echo "["
     echo $body | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
