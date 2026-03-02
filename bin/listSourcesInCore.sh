@@ -79,7 +79,12 @@ if [ "$FORMAT" = "json" ]; then
     echo "["
     echo $body | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
         | grep -oP '"[^"]+"\s*,\s*\d+' \
-        | awk '{match($0, /^"([^"]+)",\s*([0-9]+)/, arr); print "  {\"source\": \"" arr[1] "\", \"count\": " arr[2] " }"}'
+        | awk '{
+            match($0, /^"([^"]+)",\s*([0-9]+)/, arr);
+            cur = "  {\"source\": \"" arr[1] "\", \"count\": " arr[2] "}";
+            if (NR>1) print prev ",";
+            prev = cur
+          } END { if (prev != "") print prev }'
     echo "]"
 else
     echo $body | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
