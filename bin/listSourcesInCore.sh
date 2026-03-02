@@ -76,18 +76,13 @@ fi
 
 # facet_counts.facet_fields.source is an alternating array: [name, count, name, count, ...]
 if [ "$FORMAT" = "json" ]; then
-    echo "$body" | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
+    echo "["
+    echo $body | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
         | grep -oP '"[^"]+"\s*,\s*\d+' \
-        | awk 'BEGIN{print "["} {
-            match($0, /^"([^"]+)",\s*([0-9]+)/, arr);
-            if (NR>1) printf ",\n";
-            printf "  {\"source\": \"%s\", \"count\": %d}", arr[1], arr[2]+0
-          } END{printf "\n]\n"}'
+        | awk '{match($0, /^"([^"]+)",\s*([0-9]+)/, arr); print "  {\"source\": \"" arr[1] "\", \"count\": " arr[2] " }"}'
+    echo "]"
 else
-    echo "$body" | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
+    echo $body | grep -oP '"source"\s*:\s*\[\K[^\]]+' \
         | grep -oP '"[^"]+"\s*,\s*\d+' \
-        | awk '{
-            match($0, /^"([^"]+)",\s*([0-9]+)/, arr);
-            printf "%-60s %d\n", arr[1], arr[2]+0
-          }'
+        | awk '{match($0, /^"([^"]+)",\s*([0-9]+)/, arr); print " " arr[1] ": " arr[2] " "}'
 fi
