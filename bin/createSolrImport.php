@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-require_once __DIR__.'/lib/reposas-loglinepaser.php';
+require_once __DIR__.'/lib/epusta-loglineparser.php';
 
 function print_help() {
     echo "\nConvert a epusta logfile to a solr importable jsonfile. \n";
