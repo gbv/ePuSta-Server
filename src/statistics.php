@@ -1,7 +1,7 @@
 <?php
 
-function getStatistics($start_date, $end_date,$identifier,$tags,$granularity) {
-    
+function getStatistics($start_date, $end_date,$identifier,$tags,$granularity,$associatedIdentifier='') {
+
     global $config;
     $solrUrl=$config['solrUrl'].$config['solrCore'].'/query';
 
@@ -27,6 +27,7 @@ function getStatistics($start_date, $end_date,$identifier,$tags,$granularity) {
 
     $query='q=dateTime:['.$start_date.'T00:00:00Z TO '.$end_date.'T23:59:59Z]';
     if ($identifier != '') $query.=' AND documentIdentifier:'.$identifier ;
+    if ($associatedIdentifier != '') $query.=' AND associatedIdentifier:'.$associatedIdentifier ;
     foreach ($tags as $tag) {
         if ( substr($tag,0,1) == '-') {
              $query .= ' AND NOT (tags:'.addcslashes(substr($tag,1),':').')';
