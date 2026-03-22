@@ -58,23 +58,22 @@ $handle = fopen($filepath, "r");
 $filename = basename ($filepath);
     
 
-$reposasLoglineParser=new ReposasLogfileParser();
+$ePuStaLoglineParser = new ePuStaLoglineParser();
 
 while (! feof($handle)) {
     if ($line = trim(fgets($handle))) {
-        $logLine=new ReposasLogline();
-        if ( $reposasLoglineParser->parse($line, $logLine)) {
-            if (count($logLine->Identifier) == 0 && $level == 'PROD')  continue;
-            $str='{ "uuid": "'.$logLine->UUID.'"';
-            $str.=', "identifier":'.json_encode($logLine->Identifier);
-            $time = new DateTime($logLine->Time);
+        $logLine = new ePuStaLogline();
+        if ($ePuStaLoglineParser->parse($line, $logLine)) {
+            if (count($logLine->documentIdentifier) == 0 && $level == 'PROD') continue;
+            if ($logLine->time === null) continue;
+            $str='{ "uuid": "'.$logLine->uuid.'"';
+            $str.=', "identifier":'.json_encode($logLine->documentIdentifier);
+            $time = new DateTime($logLine->time);
             $str.=', "dateTime":"'.$time->format('Y-m-d\TH:i:s\Z').'"';
-            $str.=', "subjects":'.json_encode($logLine->Subjects);
-            $str.=', "source":'.$filename;
+            $str.=', "tags":'.json_encode($logLine->tags);
+            $str.=', "source":"'.$filename.'"';
             $str.='}';
             echo $str."\n";
-        } else {
-            //die("Error: malformed Logline - abort Processing.\n");
         }
     }
 }
