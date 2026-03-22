@@ -65,11 +65,11 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
             break;
     }
     if ($identifier == '*') {
-        $identifierQuery = 'identifier:["" TO *]';
+        $identifierQuery = 'documentIdentifier:["" TO *]';
     } else {
-        $identifierQuery = 'identifier:'.$identifier;
+        $identifierQuery = 'documentIdentifier:'.$identifier;
     }
-    $query='q='.$identifierQuery.'  AND  NOT (subjects:filter*) AND NOT (subjects:reposas\:filter*) AND NOT (subjects:epusta\:filter*)';
+    $query='q='.$identifierQuery.'  AND  NOT (tags:filter*) AND NOT (tags:reposas\:filter*) AND NOT (tags:epusta\:filter*)';
     $query.=' AND dateTime:['.$from.'T00:00:00Z TO '.$until.'T23:59:59Z]';
     $query.='&rows=1';
     $query.='&json.facet={';
@@ -84,15 +84,15 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
     }
     // if $datefacet=true; identifer is a subfacet
     if (! $summarized) {
-        $query.='      identifier: {';
+        $query.='      documentIdentifier: {';
         $query.='        type:terms, ';
-        $query.='        field:identifier,';
+        $query.='        field:documentIdentifier,';
         $query.='        limit:10000,';
         $query.='        facet: { ';
     }
     $query.='          oascontent:{';
     $query.='            type:terms, ';
-    $query.='            field:subjects, ';
+    $query.='            field:tags, ';
     $query.='            prefix:"oas:content"';
     $query.='          }';
     if (! $summarized) {
@@ -202,8 +202,8 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
             }
 
             // TO DO Test for identifier
-            if (isset ($bucket['identifier'])){
-                foreach ($bucket['identifier']['buckets'] as $bucket2) {
+            if (isset ($bucket['documentIdentifier'])){
+                foreach ($bucket['documentIdentifier']['buckets'] as $bucket2) {
                     $entries=getEntrysForIdentifierBucket($bucket2,$identifier,$addemptyrecords,$format,$content);
                     if ($entries===false) continue;
                     foreach ($entries as $key => $entry) {
@@ -247,9 +247,9 @@ function solr2entries ($identifier,$granularity,$addemptyrecords,$solrjson,$form
 
         }
 
-    } else if (isset($solrResult['facets']['identifier'])) {
+    } else if (isset($solrResult['facets']['documentIdentifier'])) {
         // case granularity total
-        foreach ($solrResult['facets']['identifier']['buckets'] as $bucket) {
+        foreach ($solrResult['facets']['documentIdentifier']['buckets'] as $bucket) {
             $entries=getEntrysForIdentifierBucket($bucket,$identifier,$addemptyrecords,$format,$content);
             if ($entries===false) continue;
             foreach ($entries as $key => $entry) {
