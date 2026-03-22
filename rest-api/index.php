@@ -173,8 +173,9 @@ $app->get('/loglines', function (Request $request, Response $response, $args) {
     $start_date=$resp['request']['start_date'];
     $end_date=$resp['request']['end_date'];
     $identifier= (isset($resp['request']['identifier'])) ? $resp['request']['identifier'] : '';
+    $associatedIdentifier= (isset($resp['request']['associatedIdentifier'])) ? $resp['request']['associatedIdentifier'] : '';
     $tags= (isset ($resp['request']['tagquery']) && $resp['request']['tagquery'] != '') ?  explode(' ',$resp['request']['tagquery']) : [];
-    $resp['loglines']=getLoglines($start_date,$end_date,$identifier,$tags);
+    $resp['loglines']=getLoglines($start_date,$end_date,$identifier,$tags,$associatedIdentifier);
     $payload = json_encode($resp);
     $response->getBody()->write($payload);
     $accesslogger->info($request->getRequestTarget().' 200');
@@ -188,6 +189,7 @@ $app->get('/statistics', function (Request $request, Response $response, $args) 
     $start_date=$param['start_date'];
     $end_date=$param['end_date'];
     $identifier= (isset($param['identifier'])) ? $param['identifier'] : '';
+    $associatedIdentifier= (isset($param['associatedIdentifier'])) ? $param['associatedIdentifier'] : '';
     $tags= (isset ($param['tagquery']) && $param['tagquery'] != '') ?  array_filter(explode(' ',$param['tagquery'])) : [];
     $granularity=(isset($param['granularity'])) ? $param['granularity'] : 'total';
 
@@ -208,7 +210,7 @@ $app->get('/statistics', function (Request $request, Response $response, $args) 
 
     $resp=[];
     $resp['request']=$request->getQueryParams();
-    $resp['statistics']=getStatistics($start_date,$end_date,$identifier,$tags,$granularity);
+    $resp['statistics']=getStatistics($start_date,$end_date,$identifier,$tags,$granularity,$associatedIdentifier);
     $payload = json_encode($resp);
     $response->getBody()->write($payload);
     $accesslogger->info($request->getRequestTarget().' 200');

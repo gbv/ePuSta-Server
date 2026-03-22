@@ -110,8 +110,15 @@ paths:
       parameters:
         - name: identifier
           in: query
-          description: | 
-            The ID of the document for which to retrieve access statistics.
+          description: |
+            The document identifier (documentIdentifier) for which to retrieve access statistics.
+          schema:
+            type: string
+        - name: associatedIdentifier
+          in: query
+          description: |
+            Filter by associated identifier (associatedIdentifier).
+          required: false
           schema:
             type: string
         - name: start_date
@@ -189,8 +196,15 @@ paths:
       parameters:
         - name: identifier
           in: query
-          description: | 
-            The ID of the document for which to retrieve access statistics.
+          description: |
+            The document identifier (documentIdentifier) for which to retrieve loglines.
+          schema:
+            type: string
+        - name: associatedIdentifier
+          in: query
+          description: |
+            Filter by associated identifier (associatedIdentifier).
+          required: false
           schema:
             type: string
         - name: start_date
@@ -310,15 +324,20 @@ components:
         logline:
           type: string
           description: The String of the original logline.
-        subjects:
+        tags:
           type: array
           items:
             type: string
-        identifier:
+        documentIdentifier:
           type: array
           items:
             type: string
-          description: Multiple identfier of the Document.
+          description: Multiple identifiers of the document.
+        associatedIdentifier:
+          type: array
+          items:
+            type: string
+          description: Associated identifiers (e.g. derivate IDs).
         sessionid:
           type: string
         source:
