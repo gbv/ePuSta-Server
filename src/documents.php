@@ -16,9 +16,9 @@ function getDocuments($start_date, $end_date,$tags, $start, $limit) {
     $query.='&rows=10';
 
     $query.='&json.facet={';
-    $query.='  identifier:{';
+    $query.='  documentIdentifier:{';
     $query.='    type:terms,';
-    $query.='    field : identifier,';
+    $query.='    field : documentIdentifier,';
     $query.='    limit:'.$limit.',';
     $query.='    offset:'.$start.'';
     $query.='  }';
@@ -26,7 +26,7 @@ function getDocuments($start_date, $end_date,$tags, $start, $limit) {
 
     $result=querySolr($solrUrl,$query);
     $docs=[];
-    foreach ($result['facets']['identifier']['buckets'] as $bucket ) {
+    foreach ($result['facets']['documentIdentifier']['buckets'] as $bucket ) {
         $doc=array();
         $doc['identifier']=$bucket['val'];
         $doc['count']=$bucket['count'];

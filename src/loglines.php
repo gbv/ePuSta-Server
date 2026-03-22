@@ -6,7 +6,7 @@ function getLoglines($start_date,$end_date,$identifier,$tags) {
     $solrUrl=$config['solrUrl'].$config['solrCore'].'/query';
 
     $query='q=dateTime:['.$start_date.'T00:00:00Z TO '.$end_date.'T23:59:59Z]';
-    if ($identifier != '') $query.=' AND identifier:'.$identifier ;
+    if ($identifier != '') $query.=' AND documentIdentifier:'.$identifier ;
     foreach ($tags as $tag) {
         if ( substr($tag,0,1) == '-') {
              $query .= ' AND NOT (tags:'.addcslashes(substr($tag,1),':').')';
