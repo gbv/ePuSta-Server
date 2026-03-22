@@ -67,7 +67,8 @@ while (! feof($handle)) {
             if (count($logLine->documentIdentifier) == 0 && $level == 'PROD') continue;
             if ($logLine->time === null) continue;
             $str='{ "uuid": "'.$logLine->uuid.'"';
-            $str.=', "identifier":'.json_encode($logLine->documentIdentifier);
+            $str.=', "documentIdentifier":'.json_encode($logLine->documentIdentifier);
+            $str.=', "associatedIdentifier":'.json_encode($logLine->associatedIdentifier);
             $time = new DateTime($logLine->time);
             $str.=', "dateTime":"'.$time->format('Y-m-d\TH:i:s\Z').'"';
             $str.=', "tags":'.json_encode($logLine->tags);
