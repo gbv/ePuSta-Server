@@ -324,7 +324,7 @@ components:
         logline:
           type: string
           description: The String of the original logline.
-        tags:
+        subjects:
           type: array
           items:
             type: string
