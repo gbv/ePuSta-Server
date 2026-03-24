@@ -88,6 +88,10 @@ function getJSON($identifier,$from,$until,$granularity,$summarized) {
         $query.='        type:terms, ';
         $query.='        field:identifier,';
         $query.='        limit:10000,';
+        if ($identifier != '*') {
+            $prefix = strstr($identifier, '*', true) ?: $identifier;
+            $query.='        prefix:"'.$prefix.'",';
+        }
         $query.='        facet: { ';
     }
     $query.='          oascontent:{';
