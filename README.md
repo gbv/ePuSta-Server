@@ -6,6 +6,21 @@ expects enriched log files in the **epustalogfile** format (produced by
 them into a Solr core and serves the aggregated statistics through two
 separate HTTP APIs.
 
+## Role in the ePuSta ecosystem
+
+This project's scope is the **Solr core and the HTTP APIs** on top of it.
+The shell helpers in `bin/` are deliberately **single-file** helpers: each
+one operates on one log / one Solr import file / one source in the core.
+
+Mass processing (iterating over directories, cron integration, bulk
+reimport) belongs in [ePuSta_tools](https://github.com/gbv/ePuSta_tools/).
+
+| Concern | Home project |
+|---|---|
+| Single-file parse / enrich / filter | [ePuSta-logfileparser](https://github.com/gbv/ePuSta-logfileparser/) |
+| Single-file import / single-source operations + HTTP APIs | this project |
+| Mass / batch processing, cron, orchestration | [ePuSta_tools](https://github.com/gbv/ePuSta_tools/) |
+
 ## Getting Started
 
 ### Prerequisites
@@ -74,12 +89,12 @@ Solr core
 
 ### Creating Solr imports
 
-Example: create the import file `reposas-2019-12-01.json` from a single log
+Example: create the import file `access-2019-12-01.json` from a single log
 file.
 
 ```
-bin/createSolrImport.php --file=reposas.2019-12-01.log --level=PROD \
-    > reposas.2019-12-01.json
+bin/createSolrImport.php --file=access-2019-12-01.epusta.log --level=PROD \
+    > access.2019-12-01.json
 ```
 
 `--level`:
@@ -97,7 +112,7 @@ bin/createSolrImport_all.sh
 Manual import of a single file:
 
 ```
-/opt/solr/bin/post -c $solrCore reposas.2019-12-01.json
+/opt/solr/bin/post -c $solrCore access.2019-12-01.json
 ```
 
 Full batch import of everything below `$solrImports`, only reimporting what is
@@ -125,7 +140,7 @@ contracts. They can be deployed side by side.
 ### OAS-compatible API (`oas-api/`)
 
 The original, lightweight endpoint that returns
-[OpenAccess-Statistik (OAS)](https://wiki.dnb.de/) compatible reports. It is
+OpenAccess-Statistik (OAS) compatible reports. It is
 optimised for drop-in replacement of an OAS provider.
 
 * Single entry point: `oas-api/index.php`
@@ -134,12 +149,9 @@ optimised for drop-in replacement of an OAS provider.
   `identifier`, `summarized`, `addemptyrecords`, `jsonheader`,
   `informational`, `format`.
 * Output: JSON (OAS report structure).
-* Dependencies: plain PHP, no external framework required.
 * Configuration: `oas-api/config.template.php` → `oas-api/config.php`.
 
-Used by existing consumers that already speak OAS.
-
-### New REST API (`rest-api/`)
+### ePuSta REST API (`rest-api/`)
 
 A newer, OpenAPI-first REST API built on top of the Slim framework. It
 replaces the ad-hoc parameter interface of the OAS API with a
@@ -147,13 +159,7 @@ documented, versioned contract and is the API that
 [ePuSta-Elements](https://github.com/PaulBorchert/ePuSta_elements) targets.
 
 * Entry point: `rest-api/index.php`
-* OpenAPI description: `rest-api/Epusta-1.0.x.openapi.yaml.template`
-  (rendered with the current base path via `rest-api/getOpenapiYaml.php`).
-* Resource handlers live in `src/`:
-  `documents.php`, `statistics.php`, `tags.php`, `loglines.php`,
-  `swagger-ui.php`, `solr.php`.
-* Request/response validation against the OpenAPI spec via
-  `League\OpenAPIValidation`.
+* OpenAPI description: `rest-api/Epusta-1.0.x.openapi.yaml`
 * Interactive documentation through a mounted Swagger-UI.
 * Configuration: `config/config.template` / `config/config.php` (shared with
   the rest of the project), plus `restApiDomain` and `restApiBasePath` for
