@@ -57,7 +57,7 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($httpCode !== 200) {
-    fwrite(STDERR, "Error: Can't connect to Solr Admin API (HTTP $httpCode).\n");
+    fwrite(STDERR, "Error: Can't connect to Solr Admin API at $coresAdminUrl (HTTP $httpCode).\n");
     fwrite(STDERR, $response . "\n");
     die();
 }
