@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="default-config" version="1.6">
+  <uniqueKey>uuid</uniqueKey>
+  <fieldType name="pdate"   class="solr.DatePointField" docValues="true"/>
+  <fieldType name="plong"   class="solr.LongPointField" docValues="true"/>
+  <fieldType name="string"  class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
+  <field name="_version_"            type="plong"   indexed="false" stored="false"/>
+  <field name="uuid"                 type="string"  multiValued="false" indexed="true" stored="true"/>
+  <field name="dateTime"             type="pdate"   indexed="true" stored="true"/>
+  <field name="source"               type="string"  multiValued="false" indexed="true" stored="true"/>
+  <field name="documentIdentifier"   type="strings" multiValued="true"  indexed="true" stored="true"/>
+  <field name="associatedIdentifier" type="strings" multiValued="true"  indexed="true" stored="true"/>
+  <field name="tags"                 type="strings" multiValued="true"  indexed="true" stored="true"/>
+</schema>
