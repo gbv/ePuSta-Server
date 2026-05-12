@@ -3,8 +3,8 @@
 
 include (__DIR__."/../config/config.php");
 
-$coresAdminUrl   = $config['solrUrl'] . 'admin/cores';
-$configsAdminUrl = $config['solrUrl'] . 'admin/configs';
+$collectionsAdminUrl = $config['solrUrl'] . 'admin/collections';
+$configsAdminUrl     = $config['solrUrl'] . 'admin/configs';
 $coreName        = $config['solrCore'];
 $configSetName   = 'configset_v1';
 $configSetDir    = __DIR__ . '/../solr/configset_v1';
@@ -54,34 +54,36 @@ if (in_array($configSetName, $configSets['configSets'] ?? [])) {
     }
 }
 
-// Check if core already exists
-$ch = curl_init($coresAdminUrl . '?action=STATUS&core=' . urlencode($coreName));
+// Check if collection already exists
+$ch = curl_init($collectionsAdminUrl . '?action=LIST');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($httpCode !== 200) {
-    fwrite(STDERR, "Error: Can't connect to Solr Admin API at $coresAdminUrl (HTTP $httpCode).\n");
+    fwrite(STDERR, "Error: Can't connect to Solr Collections API at $collectionsAdminUrl (HTTP $httpCode).\n");
     fwrite(STDERR, $response . "\n");
     die();
 }
 
-$status = json_decode($response, true);
+$collections = json_decode($response, true);
 
-if (!empty($status['status'][$coreName]['name'])) {
-    echo "Core '$coreName' already exists.\n";
+if (in_array($coreName, $collections['collections'] ?? [])) {
+    echo "Collection '$coreName' already exists.\n";
     die();
 }
 
-// Create the core using the uploaded configset
+// Create the collection using the uploaded configset
 $params = http_build_query([
-    'action'    => 'CREATE',
-    'name'      => $coreName,
-    'configSet' => $configSetName,
+    'action'            => 'CREATE',
+    'name'              => $coreName,
+    'numShards'         => 1,
+    'replicationFactor' => 1,
+    'configName'        => $configSetName,
 ]);
 
-$ch = curl_init($coresAdminUrl . '?' . $params);
+$ch = curl_init($collectionsAdminUrl . '?' . $params);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -90,9 +92,9 @@ curl_close($ch);
 $result = json_decode($response, true);
 
 if ($httpCode !== 200 || !empty($result['error'])) {
-    fwrite(STDERR, "Error creating core '$coreName' (HTTP $httpCode).\n");
+    fwrite(STDERR, "Error creating collection '$coreName' (HTTP $httpCode).\n");
     fwrite(STDERR, $response . "\n");
     die();
 }
 
-echo "Core '$coreName' created successfully.\n";
+echo "Collection '$coreName' created successfully.\n";
