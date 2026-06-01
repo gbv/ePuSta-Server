@@ -25,35 +25,54 @@ reimport) belongs in [ePuSta_tools](https://github.com/gbv/ePuSta_tools/).
 
 ### Prerequisites
 * Linux
-* Solr 7
-* PHP 7.4+
-* `curl`, `bash`
+* Solr 8+
+* PHP 7.4+ with `curl` extension
+* `bash`
 
 ### Installation
 
-* Clone this repository:
+**1. Clone this repository**
 
-  ```
-  git clone https://github.com/gbv/ePuSta-Server.git
-  ```
+```bash
+git clone https://github.com/gbv/ePuSta-Server.git
+```
 
-* Create a core in Solr and copy the files from the `solr/` directory into the
-  core's `conf/` directory.
-* Copy the config template and adjust the values:
+**2. Deploy the Solr configset** *(once per Solr server — skip if `configset_v1` is already present)*
 
-  ```
-  cp config/config.template config/config
-  ```
+The directory `solr/configset_v1/` contains the schema and configuration for
+the Solr core. Copy it into Solr's configsets directory. The typical path is
+`/var/solr/data/configsets/`:
 
-  Relevant variables (consumed by the shell scripts in `bin/`):
+```bash
+mkdir -p /var/solr/data/configsets/configset_v1/conf
+cp solr/configset_v1/* /var/solr/data/configsets/configset_v1/conf/
+```
 
-  | Variable | Purpose |
-  |---|---|
-  | `solrUrl` | Base URL of the Solr server (e.g. `http://localhost:8983/solr/`) |
-  | `solrCore` | Name of the Solr core |
-  | `epustaLogs` | Directory containing the `*.epusta.log[.gz]` files |
-  | `solrImports` | Directory where Solr import JSON files are written |
-  | `epustaServerBin` | Path to this project's `bin/` directory |
+**3. Create the config file**
+
+```bash
+cp config/config.template config/config
+```
+
+Edit `config/config` and fill in the values:
+
+| Variable | Purpose |
+|---|---|
+| `solrUrl` | Base URL of the Solr server (e.g. `http://localhost:8983/solr/`) |
+| `solrCore` | Name of the Solr core to create |
+| `epustaLogs` | Directory containing the `*.epusta.log[.gz]` files |
+| `solrImports` | Directory where Solr import JSON files are written |
+| `epustaServerBin` | Path to this project's `bin/` directory |
+
+**4. Create the Solr core**
+
+```bash
+bin/createSolrCore.php
+```
+
+The script checks whether the core already exists and creates it using the
+`configset_v1` configset. Schema and Solr configuration are applied
+automatically from the configset.
 
 ## Working with the Core
 
