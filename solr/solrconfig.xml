@@ -17,6 +17,8 @@
 -->
 <config>
 
+  <luceneMatchVersion>LATEST</luceneMatchVersion>
+
   <dataDir>${solr.data.dir:}</dataDir>
 
   <directoryFactory name="DirectoryFactory"
